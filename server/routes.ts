@@ -30,7 +30,7 @@ const MOCK_EMAILS = [
     sender: "newsletter@techly.com",
     subject: "Weekly Tech Roundup",
     body: "This week in tech: AI takes over email summarization! Read more about the latest trends in LLMs and automation.",
-  }
+  },
 ];
 
 async function summarizeEmail(body: string, subject: string) {
@@ -54,7 +54,11 @@ async function summarizeEmail(body: string, subject: string) {
     });
 
     const content = response.choices[0].message.content;
-    if (!content) return { summary: "Failed to generate summary.", category: "Uncategorized" };
+    if (!content)
+      return {
+        summary: "Failed to generate summary.",
+        category: "Uncategorized",
+      };
 
     return JSON.parse(content);
   } catch (error) {
@@ -65,9 +69,8 @@ async function summarizeEmail(body: string, subject: string) {
 
 export async function registerRoutes(
   httpServer: Server,
-  app: Express
+  app: Express,
 ): Promise<Server> {
-
   app.get(api.emails.list.path, async (req, res) => {
     const emails = await storage.getEmails();
     res.json(emails);
@@ -82,7 +85,7 @@ export async function registerRoutes(
       if (err instanceof z.ZodError) {
         return res.status(400).json({
           message: err.errors[0].message,
-          field: err.errors[0].path.join('.'),
+          field: err.errors[0].path.join("."),
         });
       }
       throw err;
@@ -92,7 +95,7 @@ export async function registerRoutes(
   app.get(api.emails.get.path, async (req, res) => {
     const email = await storage.getEmail(Number(req.params.id));
     if (!email) {
-      return res.status(404).json({ message: 'Email not found' });
+      return res.status(404).json({ message: "Email not found" });
     }
     res.json(email);
   });
@@ -101,7 +104,7 @@ export async function registerRoutes(
     const id = Number(req.params.id);
     const email = await storage.getEmail(id);
     if (!email) {
-      return res.status(404).json({ message: 'Email not found' });
+      return res.status(404).json({ message: "Email not found" });
     }
     await storage.deleteEmail(id);
     res.status(204).send();
@@ -111,15 +114,18 @@ export async function registerRoutes(
     const id = Number(req.params.id);
     const email = await storage.getEmail(id);
     if (!email) {
-      return res.status(404).json({ message: 'Email not found' });
+      return res.status(404).json({ message: "Email not found" });
     }
 
-    const { summary, category } = await summarizeEmail(email.body, email.subject);
-    
+    const { summary, category } = await summarizeEmail(
+      email.body,
+      email.subject,
+    );
+
     const updatedEmail = await storage.updateEmail(id, {
       summary,
       category,
-      isProcessed: true
+      isProcessed: true,
     });
 
     res.json(updatedEmail);
@@ -137,16 +143,19 @@ export async function registerRoutes(
     // 2. Fetch all unprocessed emails
     // (In a real app, we might limit this batch size)
     const allEmails = await storage.getEmails();
-    const unprocessed = allEmails.filter(e => !e.isProcessed);
+    const unprocessed = allEmails.filter((e) => !e.isProcessed);
 
     // 3. Process them
     let processedCount = 0;
     for (const email of unprocessed) {
-      const { summary, category } = await summarizeEmail(email.body, email.subject);
+      const { summary, category } = await summarizeEmail(
+        email.body,
+        email.subject,
+      );
       await storage.updateEmail(email.id, {
         summary,
         category,
-        isProcessed: true
+        isProcessed: true,
       });
       processedCount++;
     }
