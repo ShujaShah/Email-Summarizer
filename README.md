@@ -90,7 +90,7 @@ Email-Summarizer/
 3. **Set up environment variables**
    
    Create a `.env` file in the root directory:
-   ```env
+   ```bash
    PORT=5010
    DATABASE_URL=postgresql://user:password@localhost:5432/email_summarizer
    AI_INTEGRATIONS_OPENAI_API_KEY=your_openai_api_key
