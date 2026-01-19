@@ -91,17 +91,10 @@ Email-Summarizer/
    
    Create a `.env` file in the root directory:
    ```env
-  # Port
-  PORT=5010
-
-   # Database
+   PORT=5010
    DATABASE_URL=postgresql://user:password@localhost:5432/email_summarizer
-
-   # OpenAI
    AI_INTEGRATIONS_OPENAI_API_KEY=your_openai_api_key
    AI_INTEGRATIONS_OPENAI_BASE_URL=https://api.openai.com/v1
-   
-   # Server
    NODE_ENV=development
    ```
 
@@ -149,21 +142,6 @@ npm start
 - `POST /api/emails/:id/summarize` - Summarize a specific email
 - `PUT /api/emails/:id` - Update email
 - `DELETE /api/emails/:id` - Delete email
-
-## Email Schema
-
-```typescript
-{
-  id: number;                    // Primary key
-  sender: string;                // Email sender address
-  subject: string;               // Email subject
-  body: string;                  // Email content
-  summary?: string;              // AI-generated summary
-  category?: string;             // Email category
-  isProcessed: boolean;          // Processing status
-  createdAt: Date;              // Created timestamp
-}
-```
 
 ## How It Works
 
@@ -213,36 +191,3 @@ npm run db:push
 ### View database:
 Use Drizzle Studio or any PostgreSQL client to inspect the data.
 
-## Error Handling
-
-The application includes comprehensive error handling:
-- API request validation with Zod
-- Database transaction support
-- User-friendly error messages
-- Logging middleware for debugging
-
-## Contributing
-
-1. Create a feature branch (`git checkout -b feature/amazing-feature`)
-2. Commit your changes (`git commit -m 'Add amazing feature'`)
-3. Push to the branch (`git push origin feature/amazing-feature`)
-4. Open a Pull Request
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Support
-
-For support, email support@example.com or open an issue in the GitHub repository.
-
-## Roadmap
-
-- [ ] User authentication and accounts
-- [ ] Email filtering and search
-- [ ] Bulk email processing
-- [ ] Export summaries (PDF, CSV)
-- [ ] Integration with email providers (Gmail, Outlook)
-- [ ] Custom AI prompts per user
-- [ ] Email templates
-- [ ] Analytics dashboard
